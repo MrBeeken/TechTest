@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "name": "Butternut & Sage Soup",
+    "description": "Slow-roasted butternut blended with cream and finished with burnt sage butter and toasted pumpkin seeds.",
+    "price": 85.00,
+    "category": "Starters",
+    "imageFile": "01-butternut-sage-soup.jpg",
+    "isVegetarian": true,
+    "rating": 4
+  },
+  {
+    "id": 2,
+    "name": "Beef Carpaccio",
+    "description": "Paper-thin aged beef, wild rocket, shaved parmesan and a caper-mustard dressing.",
+    "price": 110.00,
+    "category": "Starters",
+    "imageFile": "02-beef-carpaccio.jpg",
+    "isVegetarian": false,
+    "rating": 3
+  },
+  {
+    "id": 3,
+    "name": "Crispy Calamari",
+    "description": "Lightly dusted calamari rings with lemon aioli and a sprinkle of smoked paprika.",
+    "price": 95.00,
+    "category": "Starters",
+    "imageFile": "03-crispy-calamari.jpg",
+    "isVegetarian": false,
+    "rating": 4
+  },
+  {
+    "id": 4,
+    "name": "Halloumi & Honey",
+    "description": "Griddled halloumi drizzled with wildflower honey, thyme and a squeeze of lemon.",
+    "price": 78.00,
+    "category": "Starters",
+    "imageFile": "04-halloumi-honey.jpg",
+    "isVegetarian": true,
+    "rating": 5
+  },
+  {
+    "id": 5,
+    "name": "Dry-Aged Sirloin",
+    "description": "300g grass-fed sirloin aged for 28 days, served with hand-cut chips and cafe de Paris butter.",
+    "price": 285.00,
+    "category": "Mains",
+    "imageFile": "05-dry-aged-sirloin.jpg",
+    "isVegetarian": false,
+    "rating": 5
+  },
+  {
+    "id": 6,
+    "name": "Karoo Lamb Sosaties",
+    "description": "Marinated Karoo lamb skewers grilled over coals with apricot, rosemary and a tomato smoor.",
+    "price": 245.00,
+    "category": "Mains",
+    "imageFile": "06-karoo-lamb-sosaties.jpg",
+    "isVegetarian": false,
+    "rating": 4
+  },
+  {
+    "id": 7,
+    "name": "Wild Mushroom Risotto",
+    "description": "Creamy arborio rice with a trio of wild mushrooms, aged parmesan and truffle oil.",
+    "price": 185.00,
+    "category": "Mains",
+    "imageFile": "07-wild-mushroom-risotto.jpg",
+    "isVegetarian": true,
+    "rating": 4
+  },
+  {
+    "id": 8,
+    "name": "Grilled Line Fish",
+    "description": "Catch of the day grilled with lemon butter, served on crushed baby potatoes and greens.",
+    "price": 265.00,
+    "category": "Mains",
+    "imageFile": "08-grilled-line-fish.jpg",
+    "isVegetarian": false,
+    "rating": 4
+  },
+  {
+    "id": 9,
+    "name": "Butter Chicken Curry",
+    "description": "Tender chicken in a velvety tomato and cashew gravy with basmati rice and garlic naan.",
+    "price": 195.00,
+    "category": "Mains",
+    "imageFile": "09-butter-chicken-curry.jpg",
+    "isVegetarian": false,
+    "rating": 3
+  },
+  {
+    "id": 10,
+    "name": "Malva Pudding",
+    "description": "The classic warm apricot sponge drenched in caramel sauce, with vanilla bean ice cream.",
+    "price": 75.00,
+    "category": "Desserts",
+    "imageFile": "10-malva-pudding.jpg",
+    "isVegetarian": true,
+    "rating": 5
+  },
+  {
+    "id": 11,
+    "name": "Dark Chocolate Fondant",
+    "description": "70% Belgian chocolate fondant with a molten centre, salted caramel and burnt orange zest.",
+    "price": 88.00,
+    "category": "Desserts",
+    "imageFile": "11-dark-chocolate-fondant.jpg",
+    "isVegetarian": true,
+    "rating": 4
+  },
+  {
+    "id": 12,
+    "name": "Lemon Posset",
+    "description": "Silky set cream with fresh lemon, shortbread crumble and a raspberry coulis.",
+    "price": 68.00,
+    "category": "Desserts",
+    "imageFile": "12-lemon-posset.jpg",
+    "isVegetarian": true,
+    "rating": 3
+  },
+  {
+    "id": 13,
+    "name": "Koeksister Cheesecake",
+    "description": "Baked cheesecake swirled with syrup-soaked koeksister and finished with cinnamon dust.",
+    "price": 82.00,
+    "category": "Desserts",
+    "imageFile": "13-koeksister-cheesecake.jpg",
+    "isVegetarian": true,
+    "rating": 4
+  },
+  {
+    "id": 14,
+    "name": "Rooibos Iced Tea",
+    "description": "House-brewed rooibos chilled over ice with honey, lemon and a sprig of mint.",
+    "price": 38.00,
+    "category": "Drinks",
+    "imageFile": "14-rooibos-iced-tea.jpg",
+    "isVegetarian": true,
+    "rating": 3
+  },
+  {
+    "id": 15,
+    "name": "Cape Sundowner",
+    "description": "Gin, blood orange and bitters topped with soda and served over crushed ice.",
+    "price": 95.00,
+    "category": "Drinks",
+    "imageFile": "15-cape-sundowner.jpg",
+    "isVegetarian": true,
+    "rating": 4
+  },
+  {
+    "id": 16,
+    "name": "Single-Origin Espresso",
+    "description": "Double shot of our rotating single-origin bean, roasted locally and pulled to order.",
+    "price": 32.00,
+    "category": "Drinks",
+    "imageFile": "16-single-origin-espresso.jpg",
+    "isVegetarian": true,
+    "rating": 4
+  }
+]

@@ -1,0 +1,35 @@
+@* ==========================================================================
+ *  Menu Explorer — Shared/NotFound
+ * ==========================================================================
+ *  Role    The one 404 page: unknown routes, unknown item ids, and the 404
+ *          branch of Home/Status.
+ *  Layer   View, bound to NotFoundViewModel.
+ *  Debug   The heading and the body switch together on RequestedId. A page that
+ *          named a dish ("That dish isn't on the menu") while explaining an
+ *          unknown route would contradict itself; when there is no id the copy
+ *          stays generic rather than inventing "menu item 0".
+ * ========================================================================== *@
+@model NotFoundViewModel
+@{
+    ViewData["Title"] = "Not found";
+}
+
+<section class="empty-state empty-state--page">
+    <p class="empty-state__glyph" aria-hidden="true">🍽️</p>
+    @if (Model.RequestedId is int missingId)
+    {
+        <h1 class="empty-state__title">That dish isn't on the menu</h1>
+        <p class="empty-state__message">
+            @($"We couldn't find menu item {missingId}. It may have been taken off the menu since the link was made.")
+        </p>
+    }
+    else
+    {
+        @* Also the branch for /Home/Status?code=404: an unknown route, not a dish. *@
+        <h1 class="empty-state__title">We couldn't find that page</h1>
+        <p class="empty-state__message">
+            @("We couldn't find the page you were looking for. It may have moved, or the link may be out of date.")
+        </p>
+    }
+    <a class="button" asp-controller="Menu" asp-action="Index">Browse the full menu</a>
+</section>

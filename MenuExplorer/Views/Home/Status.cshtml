@@ -1,0 +1,21 @@
+@* ==========================================================================
+ *  Menu Explorer — Home/Status
+ * ==========================================================================
+ *  Role    Friendly page for any non-404 status code that would have no body.
+ *  Layer   View, bound to an int status code.
+ *  Debug   The code shown is always one the controller validated and echoed into
+ *          Response.StatusCode, so it can never read "HTTP 0".
+ * ========================================================================== *@
+@model int
+@{
+    ViewData["Title"] = "Something went wrong";
+}
+
+<section class="empty-state empty-state--page">
+    <p class="empty-state__glyph" aria-hidden="true">⚠️</p>
+    <h1 class="empty-state__title">Something went wrong</h1>
+    <p class="empty-state__message">
+        The server responded with HTTP @Model. If this keeps happening, please let us know what you were doing when it occurred.
+    </p>
+    <a class="button" asp-controller="Home" asp-action="Index">Back to the home page</a>
+</section>

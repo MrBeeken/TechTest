@@ -1,0 +1,35 @@
+@* ==========================================================================
+ *  Menu Explorer — Shared/_EmptyState
+ * ==========================================================================
+ *  Role    The one empty-state layout, used for an empty category and for a
+ *          search with no matches.
+ *  Layer   View partial, bound to EmptyStateViewModel.
+ *  Debug   Renders a link, a button, or nothing depending on the view model. The
+ *          button path is inert without JavaScript, which is why its container
+ *          ships hidden in Menu/Index. The heading level comes from the model:
+ *          h2 at page level, h3 inside a section that already owns an h2, so the
+ *          outline never gains a second peer heading mid-section.
+ * ========================================================================== *@
+@model EmptyStateViewModel
+@{
+    // Built as a TagBuilder rather than written inline because the element name is
+    // data. InnerHtml.Append stores the title unencoded and WriteTo encodes it, so
+    // this is exactly as safe as @Model.Title in markup.
+    TagBuilder titleHeading = new($"h{Model.HeadingLevel}");
+    titleHeading.AddCssClass("empty-state__title");
+    titleHeading.InnerHtml.Append(Model.Title);
+}
+<section class="empty-state">
+    <p class="empty-state__glyph" aria-hidden="true">🍽️</p>
+    @titleHeading
+    <p class="empty-state__message">@Model.Message</p>
+    @if (Model.ShowClearSearchAction)
+    {
+        @* Wired up by menu-search.js; never shown without it. *@
+        <button class="button" type="button" data-search-clear>Clear search</button>
+    }
+    else if (!string.IsNullOrEmpty(Model.ActionUrl))
+    {
+        <a class="button" href="@Model.ActionUrl">@Model.ActionText</a>
+    }
+</section>

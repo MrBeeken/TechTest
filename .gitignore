@@ -1,0 +1,41 @@
+## .NET build output
+[Bb]in/
+[Oo]bj/
+artifacts/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.dbmdl
+*.pdb
+*.cache
+project.lock.json
+
+## Test results & coverage
+[Tt]est[Rr]esult*/
+coverage*.json
+coverage*.xml
+coverage*.info
+*.coverage
+*.coveragexml
+
+## IDEs
+.vs/
+.vscode/
+.idea/
+*.swp
+*~
+
+## Repository internals and their accidental copies
+# A duplicated .git folder is object blobs plus local metadata (config, FETCH_HEAD,
+# editor index caches). It must never be committed, and it is easy to miss in review.
+.git copy/
+
+## OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Local configuration overrides
+appsettings.Local.json
+launchSettings.json.bak

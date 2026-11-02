@@ -1,0 +1,90 @@
+@* ==========================================================================
+ *  Menu Explorer — Home/Index
+ * ==========================================================================
+ *  Role    Landing page: hero, at-a-glance statistics, today's specials.
+ *  Layer   View, bound to HomeViewModel. Makes no data decisions.
+ *  Debug   Specials can legitimately be empty (nothing rated 4+), in which case
+ *          the section degrades to the shared empty state rather than rendering
+ *          a heading over a blank grid.
+ * ========================================================================== *@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Home";
+
+    EmptyStateViewModel specialsEmptyState = new EmptyStateViewModel(
+        title: "No specials on the board today",
+        message: "The kitchen is between menus. Everything we cook is still available to browse.")
+    {
+        ActionUrl = Url.Action("Index", "Menu"),
+        ActionText = "Browse the full menu",
+
+        // Nested under "Today's specials" (h2), so this panel is a subsection.
+        HeadingLevel = 3
+    };
+}
+
+<section class="hero">
+    <div class="hero__content">
+        <p class="eyebrow">Fictional restaurant &middot; Cape Town</p>
+        <h1>Good food, <span class="hero__accent">royally</span> done.</h1>
+        <p class="lede">
+            A small seasonal menu, cooked with care and served without fuss.
+            Browse by section, search for an ingredient, or just see what the kitchen is proud of today.
+        </p>
+        <div class="hero__actions">
+            <a class="button" asp-controller="Menu" asp-action="Index">Browse the full menu</a>
+            <a class="button button--ghost" asp-controller="Menu" asp-action="Index" asp-route-category="Desserts">Start with dessert</a>
+        </div>
+    </div>
+
+    <aside class="hero__panel" aria-label="Menu at a glance">
+        <p class="hero__panel-label">Menu at a glance</p>
+        <dl class="stats">
+            <div class="stats__item">
+                <dt>Dishes</dt>
+                <dd>@Model.ItemCount</dd>
+            </div>
+            <div class="stats__item">
+                <dt>Sections</dt>
+                <dd>@Model.CategoryCount</dd>
+            </div>
+            <div class="stats__item">
+                <dt>Vegetarian</dt>
+                <dd>@Model.VegetarianCount</dd>
+            </div>
+            <div class="stats__item">
+                <dt>Average rating</dt>
+                <dd>@Model.AverageRatingDisplay<small>/5</small></dd>
+            </div>
+        </dl>
+    </aside>
+</section>
+
+<section class="section" aria-labelledby="specials-heading">
+    <div class="section__head">
+        <div>
+            <p class="eyebrow">@Model.TodayDisplay</p>
+            <h2 id="specials-heading">Today's specials</h2>
+        </div>
+        <a class="section__link" asp-controller="Menu" asp-action="Index">See everything</a>
+    </div>
+
+    @* GetSpecials can legitimately return nothing (no item rated 4+), so the
+       section degrades to the same friendly empty state used elsewhere rather
+       than rendering a heading over an empty grid. *@
+    @if (Model.Specials.Count > 0)
+    {
+        @* Each card is rendered by the MenuItemCard ViewComponent, which reuses
+           the exact same _MenuItemCard partial as the menu grid. *@
+        <div class="card-grid">
+            @foreach (MenuItem item in Model.Specials)
+            {
+                @await Component.InvokeAsync("MenuItemCard", new { item })
+            }
+        </div>
+    }
+    else
+    {
+        <partial name="_EmptyState" model="specialsEmptyState" />
+    }
+</section>

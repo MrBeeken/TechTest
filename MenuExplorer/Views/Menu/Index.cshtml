@@ -1,0 +1,124 @@
+@* ==========================================================================
+ *  Menu Explorer — Menu/Index
+ * ==========================================================================
+ *  Role    The card grid, its search toolbar, and the two empty states.
+ *  Layer   View. Reads a MenuIndexViewModel only; the category is already
+ *          resolved by the controller, so this file makes no parsing decisions.
+ *  Debug   data-total-items carries the whole menu size, so the client-side
+ *          counter keeps reporting "of 16" even when the server filtered the
+ *          grid to one category.
+ * ========================================================================== *@
+@model MenuIndexViewModel
+@{
+    ViewData["Title"] = Model.Category?.ToString() ?? "The menu";
+    ViewData["Description"] = Model.Category is null
+        ? "Every dish and drink on the Menu Explorer menu."
+        : $"All {Model.Heading.ToLowerInvariant()} on the Menu Explorer menu.";
+
+    EmptyStateViewModel categoryEmptyState = new EmptyStateViewModel(
+        title: Model.Category is null ? "The kitchen is still plating up" : $"No {Model.Heading.ToLowerInvariant()} today",
+        message: Model.Category is null
+            ? "There are no menu items to show right now. Please check back shortly."
+            : "Nothing in this section made it onto today's menu. Try another category — the rest of the menu is very much open.")
+    {
+        ActionUrl = Url.Action("Index", "Menu"),
+        ActionText = "Browse the full menu"
+    };
+
+    string resultSummary = $"Showing {Model.Items.Count} of {Model.TotalItemCount} dishes";
+}
+
+<section class="page-head">
+    <p class="eyebrow">@(Model.Category is null ? "Everything we cook" : "Filtered menu")</p>
+    <h1>@Model.Heading</h1>
+    <p class="lede">
+        @if (Model.Category is null)
+        {
+            @($"{Model.TotalItemCount} dishes and drinks, grouped by section. Pick a category above or search below.")
+        }
+        else
+        {
+            @($"Every dish in {Model.Heading}, served from the kitchen's seasonal menu.")
+        }
+    </p>
+</section>
+
+@if (Model.UnknownCategory is not null)
+{
+    <div class="notice" role="status">
+        <p>
+            <strong>&ldquo;@Model.UnknownCategory&rdquo;</strong> isn't a menu category, so we're showing you everything instead.
+        </p>
+    </div>
+}
+
+@if (Model.HasItems)
+{
+    @* The grid is a labelled section so its card titles (h3) sit under a real h2
+       and the heading outline never skips a level. The heading is visually
+       hidden because the design already reads as a grid; it exists for assistive
+       technology and for the document outline. *@
+    <section class="menu-results" aria-labelledby="menu-results-heading">
+        <h2 class="visually-hidden" id="menu-results-heading">Menu items</h2>
+
+        @* The toolbar is hidden until menu-search.js removes [hidden]: a search box
+           that cannot search is worse than no search box at all, so it only appears
+           once its behaviour is available. *@
+        <div class="menu-toolbar" data-menu-toolbar hidden>
+            <div class="search">
+                <label class="search__label" for="menu-search">Find a dish</label>
+                <input class="search__input"
+                       id="menu-search"
+                       type="search"
+                       placeholder="Search by dish, ingredient or category"
+                       autocomplete="off"
+                       data-menu-search />
+            </div>
+
+            <p class="menu-toolbar__count" role="status" aria-live="polite">
+                <span data-result-count>@resultSummary</span>
+            </p>
+        </div>
+
+        @* Without JavaScript the toolbar above stays hidden, so say why instead of
+           leaving a silent gap where the search box would be. The category filter
+           above is server-rendered and keeps working. *@
+        <noscript>
+            <p class="notice">
+                Search needs JavaScript. The category filter above narrows the menu without it.
+            </p>
+        </noscript>
+
+        @* data-total-items carries the *whole* menu size, so the client-side
+           counter keeps reporting "of 16" even when the server filtered the grid
+           down to one category. Without it the script would report the page's own
+           card count as the total and silently lose the menu-wide context. *@
+        <div class="card-grid" data-menu-grid data-total-items="@Model.TotalItemCount">
+            @foreach (MenuItem item in Model.Items)
+            {
+                <partial name="_MenuItemCard" model="item" />
+            }
+        </div>
+
+        @* Hidden by default: only the client-side search ever reveals it. *@
+        <div data-search-empty hidden>
+            <partial name="_EmptyState" model="@(new EmptyStateViewModel(
+                title: "No dishes match that search",
+                message: "Search looks at dish names, descriptions and categories. Try a shorter word or a different ingredient.")
+            {
+                ShowClearSearchAction = true,
+
+                // Inside the "Menu items" section, so this is a subsection.
+                HeadingLevel = 3
+            })" />
+        </div>
+    </section>
+}
+else
+{
+    <partial name="_EmptyState" model="categoryEmptyState" />
+}
+
+@section Scripts {
+    <script src="~/js/menu-search.js" asp-append-version="true" defer></script>
+}

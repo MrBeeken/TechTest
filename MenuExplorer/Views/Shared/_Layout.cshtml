@@ -1,0 +1,62 @@
+@* ==========================================================================
+ *  Menu Explorer — Shared/_Layout
+ * ==========================================================================
+ *  Role    The single document shell: head metadata, skip link, header, the
+ *          shared category bar, main, footer, and the Scripts section.
+ *  Layer   View. Receives no model; page content arrives via RenderBody.
+ *  Debug   The category bar is rendered HERE, not per page, which is why a
+ *          filter control appears everywhere without any controller code. The
+ *          Scripts section is optional so pages without JavaScript stay lean.
+ * ========================================================================== *@
+<!DOCTYPE html>
+@* en-ZA, not a bare "en": the menu is South African (rand prices, local dishes),
+   and a screen reader otherwise reads it in the wrong English voice. *@
+<html lang="en-ZA">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@(ViewData["Title"] is string pageTitle ? $"{pageTitle} · Menu Explorer" : "Menu Explorer")</title>
+    <meta name="description" content="@(ViewData["Description"] as string ?? "A browsable menu for a fictional restaurant, built with ASP.NET Core MVC and Razor.")" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to the menu</a>
+
+    <header class="site-header">
+        <div class="shell site-header__inner">
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <span class="brand__crown" aria-hidden="true">&#9819;</span>
+                <span class="brand__text">Menu<strong>Explorer</strong></span>
+            </a>
+
+            <nav class="site-nav" aria-label="Primary">
+                <a asp-controller="Home" asp-action="Index">Home</a>
+                <a asp-controller="Menu" asp-action="Index">The menu</a>
+            </nav>
+        </div>
+    </header>
+
+    @* Shared across every page: the category filter/nav bar is a partial
+       rendered by the layout rather than duplicated in each view. *@
+    <div class="category-bar">
+        <div class="shell">
+            <partial name="_CategoryNav" />
+        </div>
+    </div>
+
+    @* tabindex="-1" lets the skip link move focus here without adding the main
+       region to the tab order. *@
+    <main id="main" class="shell" tabindex="-1">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="shell site-footer__inner">
+            <p><strong>Menu Explorer</strong> &mdash; a Razor/MVC technical exercise. The restaurant is fictional; the palette is not.</p>
+            <p>All prices in South African rand (ZAR), VAT included.</p>
+        </div>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

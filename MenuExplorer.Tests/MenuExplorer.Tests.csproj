@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+
+    <!--
+      A solution-wide -p:GenerateDocumentationFile=true (CI, or a reviewer checking
+      the app's XML docs) would otherwise raise ~140 CS1591 warnings for this
+      project alone: xUnit test methods are public by requirement and their names
+      are the documentation. The app project keeps CS1591 enabled, which is what
+      actually deserves the warning.
+    -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <!--
+      The host pins its content root to the test output folder, so it resolves
+      its web root as wwwroot *beside the test assembly*. Copying the web
+      project's wwwroot there makes the startup image check and the static-file
+      tests exercise the assets the app actually ships, rather than a fixture.
+  -->
+  <ItemGroup>
+    <Content Include="..\MenuExplorer\wwwroot\**\*"
+             Link="wwwroot\%(RecursiveDir)%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MenuExplorer\MenuExplorer.csproj" />
+  </ItemGroup>
+
+</Project>

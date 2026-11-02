@@ -1,0 +1,29 @@
+@* ==========================================================================
+ *  Menu Explorer — Shared/Error
+ * ==========================================================================
+ *  Role    Terminal page for an unhandled exception (production only).
+ *  Layer   View, bound to ErrorViewModel.
+ *  Debug   The request id is the link between what the user saw and the stack
+ *          trace in the log, so it is shown whenever one exists.
+ * ========================================================================== *@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<section class="empty-state empty-state--page">
+    <p class="empty-state__glyph" aria-hidden="true">⚠️</p>
+    <h1 class="empty-state__title">An unexpected error occurred</h1>
+    <p class="empty-state__message">
+        Something broke while building this page. Nothing on your side caused it, and no data was saved.
+    </p>
+
+    @if (Model.ShowRequestId)
+    {
+        <p class="empty-state__meta">
+            Reference: <code>@Model.RequestId</code>
+        </p>
+    }
+
+    <a class="button" asp-controller="Home" asp-action="Index">Back to the home page</a>
+</section>

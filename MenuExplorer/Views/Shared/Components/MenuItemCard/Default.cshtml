@@ -1,0 +1,10 @@
+@* ==========================================================================
+ *  Menu Explorer — Components/MenuItemCard/Default
+ * ==========================================================================
+ *  Role    The ViewComponent's default view.
+ *  Layer   View. Deliberately a one-liner: it delegates to the same partial the
+ *          grid uses, so the component adds an invocation boundary without
+ *          forking the markup.
+ * ========================================================================== *@
+@model MenuItem
+<partial name="_MenuItemCard" model="Model" />

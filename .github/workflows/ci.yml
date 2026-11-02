@@ -1,0 +1,31 @@
+# Build, format and test gate. The repository's conventions are enforced here and
+# by RepositoryConventionsTests, so a green pipeline means both the code and the
+# formatting rules hold.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build (warnings are errors)
+        run: dotnet build --no-restore -c Release
+
+      - name: Verify formatting conventions
+        run: dotnet format --verify-no-changes --no-restore
+
+      - name: Test
+        run: dotnet test --no-build -c Release --logger "console;verbosity=normal"

@@ -1,0 +1,15 @@
+@* ==========================================================================
+ *  Menu Explorer — Views/_ViewImports
+ * ==========================================================================
+ *  Role    Usings and tag-helper registration for every view.
+ *  Layer   Razor configuration, compiled once.
+ *  Debug   MenuExplorer.Models is imported here, which is why no view declares
+ *          @using for its model. The second addTagHelper line is what registers
+ *          <star-rating>; remove it and every rating silently renders as text.
+ * ========================================================================== *@
+@using MenuExplorer
+@using MenuExplorer.Models
+@using MenuExplorer.Services
+@using MenuExplorer.ViewComponents
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, MenuExplorer

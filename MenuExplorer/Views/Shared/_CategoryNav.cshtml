@@ -1,0 +1,56 @@
+@* ==========================================================================
+ *  Menu Explorer — Shared/_CategoryNav
+ * ==========================================================================
+ *  Role    The global category filter, rendered by _Layout on every page.
+ *  Layer   View partial. Injects IMenuService for the counts and
+ *          MenuNavigationContext for the current section.
+ *  Debug   The active pill comes from MenuNavigationContext, which the menu
+ *          controller fills with the category it actually resolved. This partial
+ *          never parses the query string: doing so made it a second, subtly
+ *          different copy of the controller's rule (?category=A&category=B
+ *          filtered on A while the nav highlighted "All"). No pill is active on
+ *          pages that are not part of the menu, and a details id that matches no
+ *          item falls back to "All".
+ * ========================================================================== *@
+@inject IMenuService MenuService
+@inject MenuNavigationContext Navigation
+@{
+    // Counts are precomputed by the service, so this partial does no filtering.
+    IReadOnlyList<MenuCategory> categories = MenuService.GetCategories();
+    IReadOnlyDictionary<MenuCategory, int> categoryCounts = MenuService.GetCategoryCounts();
+    int totalItemCount = MenuService.GetAll().Count;
+
+    // Both values were resolved by the controller. Nothing is re-derived here.
+    MenuCategory? activeCategory = Navigation.ActiveCategory;
+
+    // "All" is current whenever a menu page is showing every section, including
+    // an unrecognised filter and a details id that matched no item.
+    bool isAllActive = Navigation.IsMenuPage && activeCategory is null;
+}
+<nav class="category-nav" aria-label="Menu categories">
+    <ul class="category-nav__list">
+        <li>
+            <a class="category-pill @(isAllActive ? "is-active" : null)"
+               asp-controller="Menu"
+               asp-action="Index"
+               aria-current="@(isAllActive ? "page" : null)">
+                All
+                <span class="category-pill__count">@totalItemCount</span>
+            </a>
+        </li>
+        @foreach (MenuCategory category in categories)
+        {
+            bool isActive = activeCategory == category;
+            <li>
+                <a class="category-pill @(isActive ? "is-active" : null)"
+                   asp-controller="Menu"
+                   asp-action="Index"
+                   asp-route-category="@category"
+                   aria-current="@(isActive ? "page" : null)">
+                    @category
+                    <span class="category-pill__count">@categoryCounts.GetValueOrDefault(category)</span>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

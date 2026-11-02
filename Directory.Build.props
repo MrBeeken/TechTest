@@ -1,0 +1,16 @@
+<Project>
+
+  <!--
+    Warnings are errors everywhere in this repository. The projects build clean
+    today (with or without GenerateDocumentationFile), and this makes that a rule
+    rather than a habit: a nullable warning or a missing XML comment fails the
+    build in CI instead of scrolling past in a log.
+  -->
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+</Project>

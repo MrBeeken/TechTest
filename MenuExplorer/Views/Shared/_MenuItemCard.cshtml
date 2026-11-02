@@ -1,0 +1,67 @@
+@* ==========================================================================
+ *  Menu Explorer — Shared/_MenuItemCard
+ * ==========================================================================
+ *  Role    The one and only card markup.
+ *  Layer   View partial. Called by the menu grid, the details page's related
+ *          row, and the MenuItemCard ViewComponent — three call sites, one file.
+ *  Debug   data-name / data-description / data-category are the search index
+ *          that menu-search.js reads, so the script never has to understand the
+ *          DOM. Changing them means changing the script.
+ * ========================================================================== *@
+@model MenuItem
+@{
+    // Fallback artwork only: when the item has a photograph (Model.ImageFile) the
+    // card shows that instead, and this glyph is never rendered.
+    string glyph = Model.Category switch
+    {
+        MenuCategory.Starters => "🥗",
+        MenuCategory.Mains => "🍲",
+        MenuCategory.Desserts => "🍰",
+        _ => "🥂"
+    };
+}
+<article class="card"
+         data-menu-card
+         data-name="@Model.Name"
+         data-description="@Model.Description"
+         data-category="@Model.Category">
+    @* One link wraps the whole card: the entire tile is a single tab stop, and
+       the card's :focus-within ring is its focus indicator (site.css). *@
+    <a class="card__link" asp-controller="Menu" asp-action="Details" asp-route-id="@Model.Id">
+        @* The media box is sized by aspect-ratio in site.css, so a photograph
+           reserves its space before the bytes arrive and the grid never jumps.
+           alt="" because the dish name is already the link text right below. *@
+        <div class="card__media" aria-hidden="true">
+            @if (Model.ImageUrl is not null)
+            {
+                <img class="card__image"
+                     src="@Model.ImageUrl"
+                     alt=""
+                     loading="lazy"
+                     decoding="async" />
+            }
+            else
+            {
+                <span class="card__glyph">@glyph</span>
+            }
+        </div>
+
+        <div class="card__body">
+            <p class="card__eyebrow">@Model.Category</p>
+            <h3 class="card__title">@Model.Name</h3>
+            <p class="card__description">@Model.Description</p>
+
+            <div class="card__footer">
+                <span class="card__price">@Model.PriceDisplay</span>
+                <star-rating value="@Model.Rating" />
+            </div>
+
+            @if (Model.IsVegetarian)
+            {
+                <p class="card__badges">
+                    <span class="badge badge--veg">Vegetarian</span>
+                </p>
+            }
+        </div>
+    </a>
+</article>

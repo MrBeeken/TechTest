@@ -1,0 +1,108 @@
+@* ==========================================================================
+ *  Menu Explorer — Menu/Details
+ * ==========================================================================
+ *  Role    One dish: breadcrumb, facts, actions, and related dishes.
+ *  Layer   View, bound to MenuDetailsViewModel.
+ *  Debug   The related row renders the SAME _MenuItemCard partial as the grid, so
+ *          a card fix cannot apply in one place and not the other.
+ * ========================================================================== *@
+@model MenuDetailsViewModel
+@{
+    ViewData["Title"] = Model.Item.Name;
+    ViewData["Description"] = Model.Item.Description;
+
+    string glyph = Model.Item.Category switch
+    {
+        MenuCategory.Starters => "🥗",
+        MenuCategory.Mains => "🍲",
+        MenuCategory.Desserts => "🍰",
+        _ => "🥂"
+    };
+
+    // The detail page's hero photograph. Not lazy: it is the largest element
+    // above the fold, so deferring it would only delay the content being seen.
+    string? imageUrl = Model.Item.ImageUrl;
+}
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol>
+        <li><a asp-controller="Menu" asp-action="Index">Menu</a></li>
+        <li><a asp-controller="Menu" asp-action="Index" asp-route-category="@Model.Item.Category">@Model.Item.Category</a></li>
+        <li><span aria-current="page">@Model.Item.Name</span></li>
+    </ol>
+</nav>
+
+<article class="detail">
+    <div class="detail__media" aria-hidden="true">
+        @if (imageUrl is not null)
+        {
+            <img class="detail__image" src="@imageUrl" alt="" decoding="async" fetchpriority="high" />
+        }
+        else
+        {
+            <span class="detail__glyph">@glyph</span>
+        }
+    </div>
+
+    <div class="detail__body">
+        <p class="eyebrow">@Model.Item.Category</p>
+        <h1>@Model.Item.Name</h1>
+        <p class="detail__description">@Model.Item.Description</p>
+
+        <dl class="detail__facts">
+            <div class="detail__fact">
+                <dt>Price</dt>
+                <dd class="detail__price">@Model.Item.PriceDisplay</dd>
+            </div>
+            <div class="detail__fact">
+                <dt>Rating</dt>
+                <dd class="detail__rating">
+                    @* The tag helper already carries the accessible label; this
+                       adjacent text is for sighted users who prefer numbers. *@
+                    <star-rating value="@Model.Item.Rating" />
+                    <span class="detail__rating-value">@Model.Item.Rating / 5</span>
+                </dd>
+            </div>
+            <div class="detail__fact">
+                <dt>Dietary</dt>
+                <dd>
+                    @if (Model.Item.IsVegetarian)
+                    {
+                        <span class="badge badge--veg">Vegetarian</span>
+                    }
+                    else
+                    {
+                        <span class="badge">Contains meat or fish</span>
+                    }
+                </dd>
+            </div>
+        </dl>
+
+        <div class="detail__actions">
+            <a class="button" asp-controller="Menu" asp-action="Index" asp-route-category="@Model.Item.Category">
+                Back to @Model.Item.Category
+            </a>
+            <a class="button button--ghost" asp-controller="Menu" asp-action="Index">See the full menu</a>
+        </div>
+    </div>
+</article>
+
+@if (Model.RelatedItems.Count > 0)
+{
+    <section class="section" aria-labelledby="related-heading">
+        <div class="section__head">
+            <h2 id="related-heading">More from @Model.Item.Category</h2>
+            <a class="section__link" asp-controller="Menu" asp-action="Index" asp-route-category="@Model.Item.Category">
+                View all @Model.Item.Category.ToString().ToLowerInvariant()
+            </a>
+        </div>
+
+        @* Same partial as the menu grid — no duplicated card markup anywhere. *@
+        <div class="card-grid">
+            @foreach (MenuItem relatedItem in Model.RelatedItems)
+            {
+                <partial name="_MenuItemCard" model="relatedItem" />
+            }
+        </div>
+    </section>
+}
