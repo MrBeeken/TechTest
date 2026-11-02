@@ -12,9 +12,17 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # Majors are pinned, not floated: '@v7' moves within v7 only, so a major
+      # release cannot change the pipeline under us. Both actions moved to
+      # Node 24 in their v5 (setup-dotnet) and v5 (checkout) releases, so these
+      # versions silence the runner's Node-20 deprecation notice.
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-dotnet@v4
+      # global-json-file makes the SDK version come from global.json (9.0.100),
+      # so the pipeline and a developer machine agree. From v5.4 this action also
+      # validates the rollForward declaration, which global.json sets to
+      # latestFeature.
+      - uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
