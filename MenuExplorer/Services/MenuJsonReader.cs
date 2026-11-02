@@ -179,10 +179,21 @@ public static class MenuJsonReader
     /// <param name="fileName">The value as written in the data file.</param>
     /// <returns><c>true</c> when the value names one file in the images folder.</returns>
     /// <remarks>
+    /// <para>
     /// The data file is not user input, but it is edited by hand and it is the one
     /// place a path could sneak into a URL. Rejecting separators and <c>..</c> here
     /// means the composed URL can never escape <c>/images/menu/</c>, even if someone
     /// later adds an item from a generated file.
+    /// </para>
+    /// <para>
+    /// The separator test is a character check rather than
+    /// <see cref="Path.GetFileName(string)"/>, because that method only knows the
+    /// separators of the platform it runs on. On Unix, <c>\</c> and <c>:</c> are
+    /// ordinary characters, so a Windows-style value such as
+    /// <c>C:\photos\soup.jpg</c> has no directory component at all and would pass —
+    /// making the rule depend on the host. Testing the characters directly gives
+    /// every platform the same answer, which is what the test suite asserts.
+    /// </para>
     /// </remarks>
     private static bool IsSafeImageFileName(string fileName)
     {
@@ -196,9 +207,11 @@ public static class MenuJsonReader
             return false;
         }
 
-        // Path.GetFileName returns the input unchanged only when there is no
-        // directory component of any kind ('/', '\' or a drive qualifier).
-        if (!string.Equals(Path.GetFileName(fileName), fileName, StringComparison.Ordinal))
+        // '/', '\' and ':' cover the separators and the drive qualifier of both
+        // platforms. This deliberately does not use Path.GetFileName: on Unix a
+        // backslash is not a separator, so "C:\photos\soup.jpg" would otherwise
+        // look like a bare file name there and be accepted.
+        if (fileName.AsSpan().IndexOfAny('/', '\\', ':') >= 0)
         {
             return false;
         }
